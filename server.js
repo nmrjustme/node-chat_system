@@ -21,9 +21,11 @@ app.use(cors());
 app.use(express.static("public"));
 
 // Test route
-app.get("/", (req, res) => {
-     res.redirect("Chat Server Running 🚀");
-});
+// app.get("/", (req, res) => {
+//      res.redirect("Chat Server Running 🚀");
+// });
+
+app.use(express.static("public"));
 
 // Socket connection
 io.on("connection", (socket) => {
