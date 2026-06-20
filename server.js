@@ -22,7 +22,7 @@ app.use(express.static("public"));
 
 // Test route
 app.get("/", (req, res) => {
-     res.send("Chat Server Running 🚀");
+     res.redirect("./public/index.html");
 });
 
 // Socket connection
