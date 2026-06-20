@@ -315,7 +315,7 @@
   // ── Socket connection (will gracefully fail if no server) ──
   let socket;
   try {
-    socket = io("http://localhost:3000", { timeout: 3000 });
+    socket = io("https://node-chat-system.vercel.app/", { timeout: 3000 });
     socket.on("chat_message", receiveMessage);
   } catch(e) {}
 
