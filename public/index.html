@@ -1,380 +1,441 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <title>Real-Time Chat</title>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+     <title>Real-Time Chat</title>
+     <meta charset="UTF-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+     <style>
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+          *,
+          *::before,
+          *::after {
+               box-sizing: border-box;
+               margin: 0;
+               padding: 0;
+          }
 
-    :root {
-      --bg:        #0F172A;
-      --surface:   #1E293B;
-      --surface2:  #273549;
-      --border:    #334155;
-      --accent:    #6366F1;
-      --accent-glow: rgba(99,102,241,0.35);
-      --accent-dim:  #4F46E5;
-      --text:      #F1F5F9;
-      --text-muted:#94A3B8;
-      --bubble-in: #273549;
-      --bubble-out:#6366F1;
-      --radius:    18px;
-      --radius-sm: 8px;
-    }
+          :root {
+               --bg: #0F172A;
+               --surface: #1E293B;
+               --surface2: #273549;
+               --border: #334155;
+               --accent: #6366F1;
+               --accent-glow: rgba(99, 102, 241, 0.35);
+               --accent-dim: #4F46E5;
+               --text: #F1F5F9;
+               --text-muted: #94A3B8;
+               --bubble-in: #273549;
+               --bubble-out: #6366F1;
+               --radius: 18px;
+               --radius-sm: 8px;
+          }
 
-    body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background: var(--bg);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-    }
+          body {
+               font-family: 'Inter', system-ui, sans-serif;
+               background: var(--bg);
+               min-height: 100vh;
+               display: flex;
+               align-items: center;
+               justify-content: center;
+               padding: 24px;
+          }
 
-    /* ── Shell ── */
-    .chat-shell {
-      width: 420px;
-      max-width: 100%;
-      background: var(--surface);
-      border-radius: 24px;
-      border: 1px solid var(--border);
-      box-shadow: 0 32px 64px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
+          /* ── Shell ── */
+          .chat-shell {
+               width: 420px;
+               max-width: 100%;
+               background: var(--surface);
+               border-radius: 24px;
+               border: 1px solid var(--border);
+               box-shadow: 0 32px 64px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04);
+               overflow: hidden;
+               display: flex;
+               flex-direction: column;
+          }
 
-    /* ── Header ── */
-    .chat-header {
-      padding: 18px 20px;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+          /* ── Header ── */
+          .chat-header {
+               padding: 18px 20px;
+               background: var(--surface);
+               border-bottom: 1px solid var(--border);
+               display: flex;
+               align-items: center;
+               gap: 12px;
+          }
 
-    .header-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), #8B5CF6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0;
-    }
+          .header-avatar {
+               width: 40px;
+               height: 40px;
+               border-radius: 50%;
+               background: linear-gradient(135deg, var(--accent), #8B5CF6);
+               display: flex;
+               align-items: center;
+               justify-content: center;
+               font-size: 18px;
+               flex-shrink: 0;
+          }
 
-    .header-info { flex: 1; }
+          .header-info {
+               flex: 1;
+          }
 
-    .header-title {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-      line-height: 1.2;
-    }
+          .header-title {
+               font-size: 15px;
+               font-weight: 600;
+               color: var(--text);
+               line-height: 1.2;
+          }
 
-    .header-status {
-      font-size: 12px;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      margin-top: 2px;
-    }
+          .header-status {
+               font-size: 12px;
+               color: var(--text-muted);
+               display: flex;
+               align-items: center;
+               gap: 5px;
+               margin-top: 2px;
+          }
 
-    .status-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #22C55E;
-      box-shadow: 0 0 6px #22C55E;
-      animation: pulse 2s infinite;
-    }
+          .status-dot {
+               width: 7px;
+               height: 7px;
+               border-radius: 50%;
+               background: #22C55E;
+               box-shadow: 0 0 6px #22C55E;
+               animation: pulse 2s infinite;
+          }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
+          @keyframes pulse {
 
-    /* ── Message area ── */
-    #messages {
-      flex: 1;
-      height: 340px;
-      overflow-y: auto;
-      padding: 20px 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      scroll-behavior: smooth;
-    }
+               0%,
+               100% {
+                    opacity: 1;
+               }
 
-    #messages::-webkit-scrollbar { width: 4px; }
-    #messages::-webkit-scrollbar-track { background: transparent; }
-    #messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+               50% {
+                    opacity: 0.5;
+               }
+          }
 
-    /* Empty state */
-    .empty-state {
-      margin: auto;
-      text-align: center;
-      color: var(--text-muted);
-    }
-    .empty-state .icon { font-size: 36px; margin-bottom: 8px; }
-    .empty-state p { font-size: 13px; }
+          /* ── Message area ── */
+          #messages {
+               flex: 1;
+               height: 340px;
+               overflow-y: auto;
+               padding: 20px 16px;
+               display: flex;
+               flex-direction: column;
+               gap: 10px;
+               scroll-behavior: smooth;
+          }
 
-    /* Message rows */
-    .msg-row {
-      display: flex;
-      flex-direction: column;
-      max-width: 78%;
-      animation: fadeUp 0.2s ease;
-    }
+          #messages::-webkit-scrollbar {
+               width: 4px;
+          }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(6px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+          #messages::-webkit-scrollbar-track {
+               background: transparent;
+          }
 
-    .msg-row.outgoing { align-self: flex-end; align-items: flex-end; }
-    .msg-row.incoming { align-self: flex-start; align-items: flex-start; }
+          #messages::-webkit-scrollbar-thumb {
+               background: var(--border);
+               border-radius: 99px;
+          }
 
-    .msg-sender {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-    }
+          /* Empty state */
+          .empty-state {
+               margin: auto;
+               text-align: center;
+               color: var(--text-muted);
+          }
 
-    .msg-bubble {
-      padding: 10px 14px;
-      border-radius: var(--radius);
-      font-size: 14px;
-      line-height: 1.5;
-      word-break: break-word;
-    }
+          .empty-state .icon {
+               font-size: 36px;
+               margin-bottom: 8px;
+          }
 
-    .msg-row.incoming .msg-bubble {
-      background: var(--bubble-in);
-      color: var(--text);
-      border-bottom-left-radius: 6px;
-    }
+          .empty-state p {
+               font-size: 13px;
+          }
 
-    .msg-row.outgoing .msg-bubble {
-      background: var(--bubble-out);
-      color: #fff;
-      border-bottom-right-radius: 6px;
-      box-shadow: 0 4px 18px var(--accent-glow);
-    }
+          /* Message rows */
+          .msg-row {
+               display: flex;
+               flex-direction: column;
+               max-width: 78%;
+               animation: fadeUp 0.2s ease;
+          }
 
-    .msg-time {
-      font-size: 10px;
-      color: var(--text-muted);
-      margin-top: 4px;
-      padding: 0 2px;
-    }
+          @keyframes fadeUp {
+               from {
+                    opacity: 0;
+                    transform: translateY(6px);
+               }
 
-    /* ── Name input area ── */
-    .name-bar {
-      padding: 12px 16px 0;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+               to {
+                    opacity: 1;
+                    transform: translateY(0);
+               }
+          }
 
-    .name-bar label {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      white-space: nowrap;
-    }
+          .msg-row.outgoing {
+               align-self: flex-end;
+               align-items: flex-end;
+          }
 
-    .name-bar input {
-      flex: 1;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      color: var(--text);
-      font-family: inherit;
-      font-size: 13px;
-      padding: 7px 11px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
+          .msg-row.incoming {
+               align-self: flex-start;
+               align-items: flex-start;
+          }
 
-    .name-bar input:focus { border-color: var(--accent); }
+          .msg-sender {
+               font-size: 11px;
+               font-weight: 600;
+               color: var(--text-muted);
+               margin-bottom: 4px;
+               letter-spacing: 0.02em;
+               text-transform: uppercase;
+          }
 
-    /* ── Compose bar ── */
-    .compose-bar {
-      padding: 12px 16px 18px;
-      display: flex;
-      gap: 8px;
-    }
+          .msg-bubble {
+               padding: 10px 14px;
+               border-radius: var(--radius);
+               font-size: 14px;
+               line-height: 1.5;
+               word-break: break-word;
+          }
 
-    .compose-bar input {
-      flex: 1;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 99px;
-      color: var(--text);
-      font-family: inherit;
-      font-size: 14px;
-      padding: 11px 18px;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
+          .msg-row.incoming .msg-bubble {
+               background: var(--bubble-in);
+               color: var(--text);
+               border-bottom-left-radius: 6px;
+          }
 
-    .compose-bar input::placeholder { color: var(--text-muted); }
-    .compose-bar input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-glow);
-    }
+          .msg-row.outgoing .msg-bubble {
+               background: var(--bubble-out);
+               color: #fff;
+               border-bottom-right-radius: 6px;
+               box-shadow: 0 4px 18px var(--accent-glow);
+          }
 
-    .send-btn {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: var(--accent);
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
-      box-shadow: 0 4px 14px var(--accent-glow);
-    }
+          .msg-time {
+               font-size: 10px;
+               color: var(--text-muted);
+               margin-top: 4px;
+               padding: 0 2px;
+          }
 
-    .send-btn:hover { background: var(--accent-dim); }
-    .send-btn:active { transform: scale(0.93); }
+          /* ── Name input area ── */
+          .name-bar {
+               padding: 12px 16px 0;
+               display: flex;
+               align-items: center;
+               gap: 8px;
+          }
 
-    .send-btn svg {
-      width: 18px;
-      height: 18px;
-      fill: none;
-      stroke: white;
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      /* nudge arrow to center visually */
-      transform: translateX(1px);
-    }
-  </style>
+          .name-bar label {
+               font-size: 12px;
+               font-weight: 600;
+               color: var(--text-muted);
+               text-transform: uppercase;
+               letter-spacing: 0.06em;
+               white-space: nowrap;
+          }
+
+          .name-bar input {
+               flex: 1;
+               background: var(--surface2);
+               border: 1px solid var(--border);
+               border-radius: var(--radius-sm);
+               color: var(--text);
+               font-family: inherit;
+               font-size: 13px;
+               padding: 7px 11px;
+               outline: none;
+               transition: border-color 0.2s;
+          }
+
+          .name-bar input:focus {
+               border-color: var(--accent);
+          }
+
+          /* ── Compose bar ── */
+          .compose-bar {
+               padding: 12px 16px 18px;
+               display: flex;
+               gap: 8px;
+          }
+
+          .compose-bar input {
+               flex: 1;
+               background: var(--surface2);
+               border: 1px solid var(--border);
+               border-radius: 99px;
+               color: var(--text);
+               font-family: inherit;
+               font-size: 14px;
+               padding: 11px 18px;
+               outline: none;
+               transition: border-color 0.2s, box-shadow 0.2s;
+          }
+
+          .compose-bar input::placeholder {
+               color: var(--text-muted);
+          }
+
+          .compose-bar input:focus {
+               border-color: var(--accent);
+               box-shadow: 0 0 0 3px var(--accent-glow);
+          }
+
+          .send-btn {
+               width: 44px;
+               height: 44px;
+               border-radius: 50%;
+               background: var(--accent);
+               border: none;
+               cursor: pointer;
+               display: flex;
+               align-items: center;
+               justify-content: center;
+               flex-shrink: 0;
+               transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+               box-shadow: 0 4px 14px var(--accent-glow);
+          }
+
+          .send-btn:hover {
+               background: var(--accent-dim);
+          }
+
+          .send-btn:active {
+               transform: scale(0.93);
+          }
+
+          .send-btn svg {
+               width: 18px;
+               height: 18px;
+               fill: none;
+               stroke: white;
+               stroke-width: 2;
+               stroke-linecap: round;
+               stroke-linejoin: round;
+               /* nudge arrow to center visually */
+               transform: translateX(1px);
+          }
+     </style>
 </head>
+
 <body>
 
-<div class="chat-shell">
+     <div class="chat-shell">
 
-  <!-- Header -->
-  <div class="chat-header">
-    <div class="header-avatar">💬</div>
-    <div class="header-info">
-      <div class="header-title">Real-Time Chat</div>
-      <div class="header-status">
-        <span class="status-dot"></span>
-        Live
-      </div>
-    </div>
-  </div>
+          <!-- Header -->
+          <div class="chat-header">
+               <div class="header-avatar">💬</div>
+               <div class="header-info">
+                    <div class="header-title">Real-Time Chat</div>
+                    <div class="header-status">
+                         <span class="status-dot"></span>
+                         Live
+                    </div>
+               </div>
+          </div>
 
-  <!-- Messages -->
-  <div id="messages">
-    <div class="empty-state" id="empty">
-      <div class="icon">🌐</div>
-      <p>No messages yet.<br>Say something!</p>
-    </div>
-  </div>
+          <!-- Messages -->
+          <div id="messages">
+               <div class="empty-state" id="empty">
+                    <div class="icon">🌐</div>
+                    <p>No messages yet.<br>Say something!</p>
+               </div>
+          </div>
 
-  <!-- Name bar -->
-  <div class="name-bar">
-    <label for="user">You</label>
-    <input id="user" placeholder="Enter your name…" autocomplete="off" />
-  </div>
+          <!-- Name bar -->
+          <div class="name-bar">
+               <label for="user">You</label>
+               <input id="user" placeholder="Enter your name…" autocomplete="off" />
+          </div>
 
-  <!-- Compose bar -->
-  <div class="compose-bar">
-    <input id="message" placeholder="Type a message…" autocomplete="off"
-           onkeydown="if(event.key==='Enter') sendMessage()" />
-    <button class="send-btn" onclick="sendMessage()" title="Send">
-      <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-    </button>
-  </div>
+          <!-- Compose bar -->
+          <div class="compose-bar">
+               <input id="message" placeholder="Type a message…" autocomplete="off"
+                    onkeydown="if(event.key==='Enter') sendMessage()" />
+               <button class="send-btn" onclick="sendMessage()" title="Send">
+                    <svg viewBox="0 0 24 24">
+                         <line x1="22" y1="2" x2="11" y2="13" />
+                         <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                    </svg>
+               </button>
+          </div>
 
-</div>
+     </div>
 
-<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-<script>
-  // ── Socket connection (will gracefully fail if no server) ──
-  let socket;
-  try {
-    socket = io("https://node-chat-system.vercel.app/", { timeout: 3000 });
-    socket.on("chat_message", receiveMessage);
-  } catch(e) {}
+     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+     <script>
+          // ── Socket connection (will gracefully fail if no server) ──
+          let socket;
+          try {
+               socket = io("https://node-chat-system.vercel.app/", { timeout: 3000 });
+               socket.on("chat_message", receiveMessage);
+          } catch (e) { }
 
-  // Track the local user's name so we can distinguish outgoing vs incoming
-  function getUser() {
-    return document.getElementById("user").value.trim();
-  }
+          // Track the local user's name so we can distinguish outgoing vs incoming
+          function getUser() {
+               return document.getElementById("user").value.trim();
+          }
 
-  function receiveMessage(data) {
-    appendMessage(data.user, data.message, data.time, data.user === getUser());
-  }
+          function receiveMessage(data) {
+               appendMessage(data.user, data.message, data.time, data.user === getUser());
+          }
 
-  function appendMessage(user, text, time, isOwn) {
-    const empty = document.getElementById("empty");
-    if (empty) empty.remove();
+          function appendMessage(user, text, time, isOwn) {
+               const empty = document.getElementById("empty");
+               if (empty) empty.remove();
 
-    const row = document.createElement("div");
-    row.className = "msg-row " + (isOwn ? "outgoing" : "incoming");
+               const row = document.createElement("div");
+               row.className = "msg-row " + (isOwn ? "outgoing" : "incoming");
 
-    const sender = document.createElement("div");
-    sender.className = "msg-sender";
-    sender.textContent = user;
+               const sender = document.createElement("div");
+               sender.className = "msg-sender";
+               sender.textContent = user;
 
-    const bubble = document.createElement("div");
-    bubble.className = "msg-bubble";
-    bubble.textContent = text;
+               const bubble = document.createElement("div");
+               bubble.className = "msg-bubble";
+               bubble.textContent = text;
 
-    const ts = document.createElement("div");
-    ts.className = "msg-time";
-    ts.textContent = time || new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+               const ts = document.createElement("div");
+               ts.className = "msg-time";
+               ts.textContent = time || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    row.appendChild(sender);
-    row.appendChild(bubble);
-    row.appendChild(ts);
+               row.appendChild(sender);
+               row.appendChild(bubble);
+               row.appendChild(ts);
 
-    const msgs = document.getElementById("messages");
-    msgs.appendChild(row);
-    msgs.scrollTop = msgs.scrollHeight;
-  }
+               const msgs = document.getElementById("messages");
+               msgs.appendChild(row);
+               msgs.scrollTop = msgs.scrollHeight;
+          }
 
-  function sendMessage() {
-    const user    = getUser();
-    const msgEl   = document.getElementById("message");
-    const message = msgEl.value.trim();
-    if (!user || !message) return;
+          function sendMessage() {
+               const user = getUser();
+               const msgEl = document.getElementById("message");
+               const message = msgEl.value.trim();
+               if (!user || !message) return;
 
-    const time = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+               const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    if (socket && socket.connected) {
-      socket.emit("chat_message", { user, message });
-    } else {
-      // Offline preview: render locally
-      appendMessage(user, message, time, true);
-    }
+               if (socket && socket.connected) {
+                    socket.emit("chat_message", { user, message });
+               } else {
+                    // Offline preview: render locally
+                    appendMessage(user, message, time, true);
+               }
 
-    msgEl.value = "";
-    msgEl.focus();
-  }
-</script>
+               msgEl.value = "";
+               msgEl.focus();
+          }
+     </script>
 
 </body>
+
 </html>
